@@ -1,6 +1,12 @@
 from flask import jsonify, request
 from flask import Blueprint
-from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
+from flask_jwt_extended import (
+    jwt_required,
+    get_jwt_identity,
+    create_access_token,
+    create_refresh_token,
+    jwt_required,
+)
 
 from models.user_model import UserModel
 from models.note_model import NoteModel
@@ -11,6 +17,9 @@ from helper.user_helper import UserHelper
 
 api = Blueprint("api", __name__)
 
+# short time for testing purposes
+JWT_TIME = 1 #min
+JWT_TIME_REFRESH = 5 #min
 
 @api.route("/login", methods=["POST"])
 def login():
@@ -28,11 +37,26 @@ def login():
 
     if not user or not UserHelper.verify_password(password, user.password):
         return jsonify({"msg": "Bad username or password"}), 401
-    
-    expires = timedelta(hours=0.5)
+
+    expires = timedelta(minutes=JWT_TIME)
     # Identity can be any data that is json serializable
     access_token = create_access_token(identity=username, expires_delta=expires)
-    return jsonify(access_token=access_token), 200
+    refresh_token = create_refresh_token(
+        identity=username, expires_delta=timedelta(hours=JWT_TIME_REFRESH)
+    )
+    return jsonify(access_token=access_token, refresh_token=refresh_token), 200
+
+
+@api.route("/refresh",  methods=["GET"])
+@jwt_required(refresh=True)
+def refresh():
+    current_user = get_jwt_identity()
+    expires = timedelta(minutes=JWT_TIME)
+    access_token = create_access_token(identity=current_user, expires_delta=expires)
+    refresh_token = create_refresh_token(
+        identity=current_user, expires_delta=timedelta(minutes=JWT_TIME_REFRESH)
+    )
+    return jsonify(access_token=access_token, refresh_token=refresh_token), 200
 
 
 @api.route("/protected", methods=["GET"])
