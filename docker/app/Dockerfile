@@ -1,0 +1,40 @@
+FROM python:3.11.1-bullseye as base
+LABEL Home Notes App
+# set work directory
+WORKDIR /app
+
+# set environment variables
+# Python path IMPORTANT
+ENV PYTHONPATH "${PYTHONPATH}:/app/src"
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# install dependencies
+RUN apt-get update -y
+
+
+# install dependencies
+RUN pip install --upgrade pip
+COPY ./requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt --upgrade
+# Create non-root user to run as
+# on your host machine, make sure that you have the right permissions and a user added to the GID 1001
+ARG UNAME=docker-runner
+ARG UID=1001
+ARG GID=1001
+RUN groupadd -g $GID -o $UNAME
+RUN useradd -m -u $UID -g $GID -o -s /bin/bash $UNAME
+
+# copy project
+COPY . .
+RUN chown -R docker-runner:docker-runner /app/src
+USER $UNAME
+
+# If debug is enable start debug steps.
+FROM base as debug
+RUN pip install debugpy
+CMD  python -m debugpy --listen 0.0.0.0:5678 --wait-for-client -m flask run --host 0.0.0.0 --port 8000
+
+FROM base as prod
+# run entrypoint.sh
+CMD  gunicorn -w 4 -b 0.0.0.0:8000 wsgi:app

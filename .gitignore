@@ -1,0 +1,7 @@
+.env
+.env.dev
+.pytest_cache
+*.html
+*htm
+__pycache__
+*.pyc
