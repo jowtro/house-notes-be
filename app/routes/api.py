@@ -1,15 +1,51 @@
 from flask import jsonify, request
 from flask import Blueprint
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 
+from models.user_model import UserModel
 from models.note_model import NoteModel
 from models.note_model import db
 from schemas.note_schema import notes_schemas, note_schema
-from datetime import datetime
+from datetime import datetime, timedelta
+from helper.user_helper import UserHelper
 
 api = Blueprint("api", __name__)
 
 
+@api.route("/login", methods=["POST"])
+def login():
+    if not request.is_json:
+        return jsonify({"msg": "Missing JSON in request"}), 400
+
+    username = request.json.get("username", None)
+    password = request.json.get("password", None)
+    if not username:
+        return jsonify({"msg": "Missing username parameter"}), 400
+    if not password:
+        return jsonify({"msg": "Missing password parameter"}), 400
+
+    user = UserModel.query.filter_by(username=username).first()
+
+    if not user or not UserHelper.verify_password(password, user.password):
+        return jsonify({"msg": "Bad username or password"}), 401
+    
+    expires = timedelta(hours=0.5)
+    # Identity can be any data that is json serializable
+    access_token = create_access_token(identity=username, expires_delta=expires)
+    return jsonify(access_token=access_token), 200
+
+
+@api.route("/protected", methods=["GET"])
+@jwt_required()
+def protected():
+    # Access the identity of the current user with get_jwt_identity
+    identity = get_jwt_identity()
+    user = UserModel.query.filter_by(username=identity).first()
+    return jsonify({"id": user.id, "username": user.username}), 200
+
+
 @api.route("/notes", methods=["GET"])
+@jwt_required()
 def get_notes():
     notes = NoteModel.query.all()
     if notes:
@@ -19,6 +55,7 @@ def get_notes():
 
 
 @api.route("/notes/<int:id>", methods=["GET"])
+@jwt_required()
 def get_note(id):
     note = NoteModel.query.filter_by(id=id).first()
     if note:
@@ -28,6 +65,7 @@ def get_note(id):
 
 
 @api.route("/notes", methods=["POST"])
+@jwt_required()
 def add_note():
     try:
         data = request.get_json()
@@ -44,6 +82,7 @@ def add_note():
 
 
 @api.route("/notes/<int:id>", methods=["PUT"])
+@jwt_required()
 def update_note(id):
     try:
         data = request.get_json()
@@ -61,6 +100,7 @@ def update_note(id):
 
 
 @api.route("/notes/<int:id>", methods=["DELETE"])
+@jwt_required()
 def delete_note(id):
     try:
         note = NoteModel.query.get(id)
