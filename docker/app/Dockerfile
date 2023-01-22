@@ -1,11 +1,11 @@
 FROM python:3.11.1-bullseye as base
 LABEL Home Notes App
 # set work directory
-WORKDIR /app
+WORKDIR /code
 
 # set environment variables
 # Python path IMPORTANT
-ENV PYTHONPATH "${PYTHONPATH}:/app/src"
+ENV PYTHONPATH "${PYTHONPATH}:/code/app"
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
@@ -27,7 +27,7 @@ RUN useradd -m -u $UID -g $GID -o -s /bin/bash $UNAME
 
 # copy project
 COPY . .
-RUN chown -R docker-runner:docker-runner /app/src
+RUN chown -R docker-runner:docker-runner /code/app
 USER $UNAME
 
 # If debug is enable start debug steps.

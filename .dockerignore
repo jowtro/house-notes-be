@@ -1,2 +1,5 @@
 poetry.lock
 pyproject.toml
+docker-compose.dev.yml
+docker-compose.yml
+docker

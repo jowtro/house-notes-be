@@ -1,7 +1,7 @@
 import pytest
 
 from helper_test import HelperTest
-from src.app import app as test_app
+from app.app import app as test_app
 
 def pytest_addoption(parser):
     parser.addoption(

@@ -1,9 +1,9 @@
 from flask import jsonify, request
 from flask import Blueprint
 
-from src.models.note_model import NoteModel
-from src.models.note_model import db
-from src.schemas.note_schema import notes_schemas, note_schema
+from models.note_model import NoteModel
+from models.note_model import db
+from schemas.note_schema import notes_schemas, note_schema
 from datetime import datetime
 
 api = Blueprint("api", __name__)

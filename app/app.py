@@ -2,8 +2,8 @@ import os
 from flask import Flask
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
-from src.models import db
-from src.routes.api import api
+from models import db
+from routes.api import api
 from dotenv import load_dotenv
 load_dotenv()
 

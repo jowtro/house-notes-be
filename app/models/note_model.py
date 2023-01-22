@@ -1,5 +1,5 @@
 import datetime
-from src.models import db
+from models import db
 
 class NoteModel(db.Model):
     #Table name for note

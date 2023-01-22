@@ -1,5 +1,5 @@
 from flask_marshmallow import Marshmallow
-from src.models.note_model import NoteModel
+from models.note_model import NoteModel
 
 
 ma = Marshmallow()
