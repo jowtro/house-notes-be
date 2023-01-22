@@ -38,7 +38,13 @@ $ python -m pytest test/
 # test with html report
 $ python -m pytest  --html=reports/report.html --self-contained-html test/
 ```
+# Run commands 
 
+### create user
+```bash
+$ poetry shell
+$ python -m flask user create
+```
 
 # Tips
 
