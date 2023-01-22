@@ -1,4 +1,4 @@
-from app.classes.singleton_meta import SingletonMeta
+from classes.singleton_meta import SingletonMeta
 
 
 class HelperTest(metaclass=SingletonMeta):
