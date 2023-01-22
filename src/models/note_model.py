@@ -1,7 +1,5 @@
 import datetime
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
+from src.models import db
 
 class NoteModel(db.Model):
     #Table name for note
