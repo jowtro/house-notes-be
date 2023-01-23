@@ -21,7 +21,7 @@ api = Blueprint("api", __name__)
 JWT_TIME = 1 #min
 JWT_TIME_REFRESH = 5 #min
 
-@api.route("/login", methods=["POST"])
+@api.route("/token", methods=["POST"])
 def login():
     if not request.is_json:
         return jsonify({"msg": "Missing JSON in request"}), 400
@@ -59,7 +59,7 @@ def refresh():
     return jsonify(access_token=access_token, refresh_token=refresh_token), 200
 
 
-@api.route("/protected", methods=["GET"])
+@api.route("/check", methods=["GET"])
 @jwt_required()
 def protected():
     # Access the identity of the current user with get_jwt_identity
