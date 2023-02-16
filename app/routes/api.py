@@ -18,8 +18,8 @@ from helper.user_helper import UserHelper
 api = Blueprint("api", __name__)
 
 # short time for testing purposes
-JWT_TIME = 1 #min
-JWT_TIME_REFRESH = 5 #min
+JWT_TIME = 15 #min
+JWT_TIME_REFRESH = 30 #min
 
 @api.route("/token", methods=["POST"])
 def login():
@@ -96,7 +96,7 @@ def add_note():
         note = NoteModel(
             title=data["title"],
             content=data["content"],
-            created_at=data["created_at"],
+            created_at=datetime.now(),
         )
         db.session.add(note)
         db.session.commit()
