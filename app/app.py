@@ -27,9 +27,9 @@ app.register_blueprint(api, url_prefix="/api/v1")
 # CORS
 cors = CORS(app)
 # allow CORS to all routes
-app.config['CORS_HEADERS'] = 'Content-Type'
 #config CORS for specifc origins if you want
-CORS(app, resources={r"/*": {"origins": "*"}})
+app.config['CORS_HEADERS'] = 'Content-Type'
+
 
 
 @user_cli.command("create")
