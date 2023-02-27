@@ -8,6 +8,15 @@ services:
     ports:
       - 8000:8000
       - 5678:5678
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      FLASK_APP: "app.py"
+      APP_SETTINGS: ${APP_SETTINGS}
+      PYTHONPATH: "./app"
+      PYTHONUNBUFFERED: "1"
+      JWT_SECRET_KEY: ${JWT_HOUSE_BE}
+      USER_TEST: ${USER_TEST_HOUSE_BE}
+      PASS_TEST: ${PASS_TEST_HOUSE_BE}
     volumes:
       - ./logs:/app/logs
       - ./reports:/app/reports
