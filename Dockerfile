@@ -1,4 +1,4 @@
-FROM python:3.11.1-bullseye as base
+FROM python:3.11.1-slim-bullseye as base
 LABEL Home Notes App
 # set work directory
 WORKDIR /code
