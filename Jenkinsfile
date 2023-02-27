@@ -25,7 +25,7 @@ pipeline {
                 script {
                     // Get latest git tag
                     echo "Build"
-                    sh "docker compose build --no-cache --build-arg PORT_APP=${PORT_APP}"
+                    sh "docker compose build --build-arg PORT_APP=${PORT_APP}"
                 }
             }
         }
