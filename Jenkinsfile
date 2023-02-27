@@ -2,7 +2,6 @@ pipeline {
     agent any 
     environment {
         PORT_APP = '8091'
-        APP_SETTINGS = "${APP_SETTINGS}"
     }
     options {
         timeout(time: 1, unit: 'HOURS')
@@ -41,9 +40,8 @@ pipeline {
                             string(credentialsId: 'USER_TEST_HOUSE_BE', variable: 'USER_TEST'),
                             string(credentialsId: 'PASS_TEST_HOUSE_BE', variable: 'PASS_TEST'),
                             string(credentialsId: 'PGSQL_NOTED', variable: 'DATABASE_URL')
-                            
                             ]) {
-                            sh ('docker compose up -d')
+                                sh ('docker compose up -d')
                     }
                 }
             }
