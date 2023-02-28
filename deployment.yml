@@ -16,7 +16,7 @@ spec:
       - name: house-notes-be-container
         image: http://localhost:5000/house-notes-be:latest
         ports:
-        - containerPort: 8001
+        - containerPort: 8002
         envFrom:
         - secretRef:  
             name: house-be-secrets
