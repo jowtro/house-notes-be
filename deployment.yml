@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: house-notes-be-container
-        image: http://localhost:5000/house-notes-be
+        image: http://localhost:5000/house-notes-be:latest
         ports:
         - containerPort: 8001
         envFrom:
