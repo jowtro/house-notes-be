@@ -10,7 +10,8 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # install dependencies
-RUN apt-get update -y
+RUN apt-get update -y && \
+    apt-get install postgresql-client gcc libpq-dev -y
 
 
 # install dependencies

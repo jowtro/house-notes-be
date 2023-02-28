@@ -18,10 +18,12 @@ pipeline {
                     sh "git rev-parse --short HEAD > commit-id"
                     tag = readFile('commit-id').replace("\n", "").replace("\r", "")
                     registryHost = "${registry}/"
-                    imageName = "${registryHost}${appName}:${tag}"
+                    imageName = "$registryHost${appName}:${tag}"
+                    echo "ImageName -> $imageName"
                     // Build Docker image
                     app_image = docker.build("${imageName}") // assign customImage here
                     // Push Docker image to registry
+                    echo "Build image done!"
                     
                     
                 }
@@ -30,11 +32,13 @@ pipeline {
         stage("Push") {
             steps {
                 script {
-                    echo "Pushing to registry"
                     //jowtro_registry is the credentials got from jenkins
                     docker.withRegistry('http://${registry}','jowtro_registry') {
+                    echo "Pushing to registry..."
                         app_image.push()
                     }
+                    echo "Pushing to registry done!"
+
                 }
             }
         }
