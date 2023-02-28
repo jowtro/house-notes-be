@@ -1,50 +1,62 @@
 pipeline { 
     agent any 
-    environment {
-        PORT_APP = '8091'
-    }
     options {
         timeout(time: 1, unit: 'HOURS')
     }
     triggers {
         pollSCM('H/5 * * * *')
     }
+    environment {
+        appName = "house-notes-be"
+        registry = "localhost:5000"
+    }
     stages { 
-        stage('Setup') {
+        stage('Build') {
             steps {
                 script {
                     // Get latest git tag
-                    echo "Build"
-                    sh 'docker compose down'
+                    sh "git rev-parse --short HEAD > commit-id"
+                    tag = readFile('commit-id').replace("\n", "").replace("\r", "")
+                    registryHost = "${registry}/"
+                    imageName = "${registryHost}${appName}:${tag}"
+                    // Build Docker image
+                    app_image = docker.build("${imageName}") // assign customImage here
+                    // Push Docker image to registry
+                    
+                    
                 }
             }
         }
-        stage('Build') {
-          
+        stage("Push") {
             steps {
                 script {
-                    // Get latest git tag
-                    echo "Build"
-                    sh "docker compose build --build-arg PORT_APP=${PORT_APP}"
+                    echo "Pushing to registry"
+                    //jowtro_registry is the credentials got from jenkins
+                    docker.withRegistry('http://${registry}','jowtro_registry') {
+                        app_image.push()
+                    }
                 }
             }
         }
         stage ('Deploy') { 
             steps {
                 script {
-                        // Start the containers with the JWT_SECRET environment variable
-                        // Deploy the Docker image to the Minikube Kubernetes cluster
-                        echo "Deploying"
-                        withCredentials([
-                            string(credentialsId: 'JWT_HOUSE_BE', variable: 'JWT_SECRET_KEY'), 
-                            string(credentialsId: 'USER_TEST_HOUSE_BE', variable: 'USER_TEST'),
-                            string(credentialsId: 'PASS_TEST_HOUSE_BE', variable: 'PASS_TEST'),
-                            string(credentialsId: 'PGSQL_NOTED', variable: 'DATABASE_URL')
-                            ]) {
-                                sh ('docker compose up -d')
-                    }
+                    // Deploy the Docker image to the Minikube Kubernetes cluster
+                    echo "Deploying"
+                    sh 'kubectl apply -f deployment.yml'
+                    sh 'kubectl apply -f service.yml'
+                    sh "kubectl set image deployment/${appName}-deployment ${appName}-container=${imageName}"
+                    sh "kubectl rollout status deployment/${appName}-deployment --timeout=5m"
                 }
             }
         }
+        stage ('Monitor') { 
+              steps {
+                // Monitor the deployed application
+                sh 'kubectl get pods'
+                sh 'kubectl get svc'
+            }
+        }
+ 
     }           
-}
+ }

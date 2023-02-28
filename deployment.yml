@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: house-notes-be-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: house-notes-be
+  template:
+    metadata:
+      labels:
+        app: house-notes-be
+    spec:
+      containers:
+      - name: house-notes-be-container
+        image: http://localhost:5000/house-notes-be
+        args: ["--insecure-skip-tls-verify"]
+        ports:
+        - containerPort: 8001
+        envFrom:
+        - secretRef:  
+            name: house-be-secrets
