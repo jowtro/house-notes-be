@@ -15,7 +15,6 @@ spec:
       containers:
       - name: house-notes-be-container
         image: http://localhost:5000/house-notes-be
-        args: ["--insecure-skip-tls-verify"]
         ports:
         - containerPort: 8001
         envFrom:
