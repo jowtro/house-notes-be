@@ -33,7 +33,7 @@ pipeline {
             steps {
                 script {
                     //jowtro_registry is the credentials got from jenkins
-                    docker.withRegistry('http://${registry}','jowtro_registry') {
+                    docker.withRegistry("http://${registry}",'jowtro_registry') {
                     echo "Pushing to registry..."
                         app_image.push()
                     }
