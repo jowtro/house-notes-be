@@ -8,7 +8,7 @@ pipeline {
     }
     environment {
         appName = "house-notes-be"
-        registry = "localhost:5000"
+        registry = "localhost:32000"
     }
     stages { 
         stage('Build') {
