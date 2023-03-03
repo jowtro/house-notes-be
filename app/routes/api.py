@@ -21,6 +21,10 @@ api = Blueprint("api", __name__)
 JWT_TIME = 15 #min
 JWT_TIME_REFRESH = 30 #min
 
+@api.route('/', methods=['GET'])
+def index():
+    return jsonify({"result": "Working!"}), 200
+
 @api.route("/token", methods=["POST"])
 def login():
     if not request.is_json:
