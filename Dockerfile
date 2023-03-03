@@ -31,6 +31,10 @@ COPY . .
 RUN chown -R docker-runner:docker-runner /code/app
 USER $UNAME
 
+#Expose port
+EXPOSE 8000
+EXPOSE 5678
+
 # If debug is enable start debug steps.
 FROM base as debug
 RUN pip install debugpy
