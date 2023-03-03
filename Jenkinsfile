@@ -47,18 +47,18 @@ pipeline {
                 script {
                     // Deploy the Docker image to the Minikube Kubernetes cluster
                     echo "Deploying"
-                    sh 'kubectl apply -f deployment.yml'
-                    sh 'kubectl apply -f service.yml'
-                    sh "kubectl set image deployment/${appName}-deployment ${appName}-container=${imageName}"
-                    sh "kubectl rollout status deployment/${appName}-deployment --timeout=5m"
+                    sh 'microk8s kubectl apply -f deployment.yml'
+                    sh 'microk8s kubectl apply -f service.yml'
+                    sh "microk8s kubectl set image deployment/${appName}-deployment ${appName}-container=${imageName}"
+                    sh "microk8s kubectl rollout status deployment/${appName}-deployment --timeout=5m"
                 }
             }
         }
         stage ('Monitor') { 
               steps {
                 // Monitor the deployed application
-                sh 'kubectl get pods'
-                sh 'kubectl get svc'
+                sh 'microk8s kubectl get pods'
+                sh 'microk8s kubectl get svc'
             }
         }
  
