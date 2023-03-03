@@ -49,6 +49,7 @@ pipeline {
                     echo "Deploying"
                     sh 'microk8s kubectl apply -f deployment.yml'
                     sh 'microk8s kubectl apply -f service.yml'
+                    sh 'microk8s kubectl apply -f ingress.yml'
                     sh "microk8s kubectl set image deployment/${appName}-deployment ${appName}-container=${imageName}"
                     sh "microk8s kubectl rollout status deployment/${appName}-deployment --timeout=5m"
                 }

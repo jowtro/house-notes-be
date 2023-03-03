@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: house-notes-be-deployment
+  labels:
+    app: notes
 spec:
   replicas: 1
   selector:
@@ -16,7 +18,7 @@ spec:
       - name: house-notes-be-container
         image: localhost:32000/house-notes-be:latest
         ports:
-        - containerPort: 8002
+        - containerPort: 8000
         envFrom:
         - secretRef:  
             name: house-be-secrets
