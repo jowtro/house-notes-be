@@ -11,7 +11,7 @@ ENV PYTHONUNBUFFERED 1
 
 # install dependencies
 RUN apt-get update -y && \
-    apt-get install postgresql-client gcc libpq-dev -y
+    apt-get install procps curl net-tools iproute2 postgresql-client gcc libpq-dev -y
 
 
 # install dependencies
