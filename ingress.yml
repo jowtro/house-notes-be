@@ -3,17 +3,17 @@ kind: Ingress
 metadata:
   name: ingress-notes-be
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: nginx
   rules:
   - host: house.jx567.net
     http:
       paths:
-      - backend:
+      - path: /
+        pathType: Prefix
+        backend:
           service:
             name: house-notes-be
             port:
-              number: 8000
-        path: /
-        pathType: Prefix
+              name: http
